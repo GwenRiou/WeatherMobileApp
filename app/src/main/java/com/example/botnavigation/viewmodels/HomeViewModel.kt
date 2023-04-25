@@ -26,7 +26,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val data = WeatherApi.retrofitService.getData()
-                _text.value = data
+                _text.value = "Sucess ${data}"
             } catch (e: Exception) {
                 _text.value = "Fail to get info"
                 _status.value = "Failure: ${e.message}"
