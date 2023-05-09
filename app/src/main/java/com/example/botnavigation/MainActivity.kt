@@ -1,18 +1,42 @@
 package com.example.botnavigation
 
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationRequest
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.botnavigation.databinding.ActivityMainBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+
+    // FusedLocationProviderClient - Main class for receiving location updates.
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    // LocationRequest - Requirements for the location updates, i.e.,
+    // how often you should receive updates, the priority, etc.
+    private lateinit var locationRequest: LocationRequest
+    // LocationCallback - Called when FusedLocationProviderClient
+    // has a new Location
+    private lateinit var locationCallback: LocationCallback
+    // This will store current location info
+    private var currentLocation: Location? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //inflate the view
@@ -34,5 +58,35 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+
+        //Location
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        getLocation()
+
+
+
+    }
+    //check the permission
+    private fun getLocation() {
+        val task = fusedLocationProviderClient.lastLocation
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED && ActivityCompat
+                .checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(this,arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                101
+            )
+            return
+        }
+        task.addOnSuccessListener {
+            if(it!=null){
+                    Toast.makeText(applicationContext, "${it.latitude}", Toast.LENGTH_LONG).show()
+                    Log.i("location", "${it.latitude}")
+            }
+        }
     }
 }
