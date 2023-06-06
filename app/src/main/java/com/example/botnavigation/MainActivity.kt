@@ -1,5 +1,7 @@
 package com.example.botnavigation
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationRequest
@@ -16,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.botnavigation.databinding.ActivityMainBinding
+import com.example.botnavigation.model.location.CurrentLocation
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -59,34 +62,10 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
-        //Location
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        getLocation()
 
 
 
     }
     //check the permission
-    private fun getLocation() {
-        val task = fusedLocationProviderClient.lastLocation
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED && ActivityCompat
-                .checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(this,arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                101
-            )
-            return
-        }
-        task.addOnSuccessListener {
-            if(it!=null){
-                    Toast.makeText(applicationContext, "${it.latitude}", Toast.LENGTH_LONG).show()
-                    Log.i("location", "${it.latitude}")
-            }
-        }
-    }
+
 }
