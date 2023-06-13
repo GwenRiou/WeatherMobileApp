@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.botnavigation.R
+import com.example.botnavigation.model.location.CurrentPosition
+import com.example.botnavigation.model.network.CurrentWeather
+import com.example.botnavigation.model.network.ResponseApi
 import com.example.botnavigation.model.network.WeatherApi
 import kotlinx.coroutines.launch
 
@@ -23,20 +26,21 @@ class HomeViewModel : ViewModel() {
     private val _text = MutableLiveData<String>()
     val text: MutableLiveData<String> = _text
 
-    private var _latitude = MutableLiveData<Double>()
-    var latitude :MutableLiveData<Double> = _latitude
 
-    private var _longitude = MutableLiveData<Double>()
-    var longitude :MutableLiveData<Double> = _longitude
+    private val _position = MutableLiveData<CurrentPosition>()
+    var position : MutableLiveData<CurrentPosition> = _position
+
+    var data = MutableLiveData<ResponseApi>()
+
     init {
-        getWeatherData()
+        //getWeatherData(position)
     }
 
-    private fun getWeatherData() {
+    fun getWeatherData(pos : CurrentPosition) {
         viewModelScope.launch {
             try {
-                _text.value = "Sucess ${latitude}"
-                val data = WeatherApi.retrofitService.getData()
+                _text.value = "Sucess "
+                data = WeatherApi.retrofitService.getData() as MutableLiveData<ResponseApi>
 
             } catch (e: Exception) {
                 _text.value = "Fail to get info"

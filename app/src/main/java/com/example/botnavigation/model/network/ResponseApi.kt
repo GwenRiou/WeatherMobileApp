@@ -1,6 +1,6 @@
 package com.example.botnavigation.model.network
 
-data class Response(
+data class ResponseApi(
     val current_weather: CurrentWeather,
     val daily: Daily,
     val daily_units: DailyUnits,
