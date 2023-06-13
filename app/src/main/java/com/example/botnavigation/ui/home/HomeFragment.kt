@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import com.example.botnavigation.databinding.FragmentHomeBinding
+import com.example.botnavigation.model.location.CurrentPosition
 import com.example.botnavigation.viewmodels.HomeViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -42,9 +43,10 @@ class HomeFragment : Fragment() {
         binding.homeViewModel = homeViewModel
 
 
-        //homeViewModel.latitude.observe(viewLifecycleOwner,{newValue->
-            //homeViewModel.text.value = newValue.latitude.toString()
-        //})
+        homeViewModel.longitude.observe(viewLifecycleOwner,{newValue->
+            homeViewModel.text.value = "The longitude change"
+            //homeViewModel.getWeatherData()
+        })
 
         // call the getWeatherData With the new location
         homeViewModel.position.observe(viewLifecycleOwner, { newValue ->
@@ -56,7 +58,7 @@ class HomeFragment : Fragment() {
         })
         //Update UI on change =)
         homeViewModel.data.observe(viewLifecycleOwner,{newValue->
-            homeViewModel.text.value = "This is a complet succes !"
+            homeViewModel.text.value = newValue.current_weather.toString()
         })
         getLocation()
         return binding.root
@@ -89,10 +91,12 @@ class HomeFragment : Fragment() {
             if(it!=null){
                 //Toast.makeText(requireContext(), "${it.latitude}", Toast.LENGTH_LONG).show()
                 Log.i("location", "${it.longitude}")
-                homeViewModel.position.value?.latitude = it.latitude
-                homeViewModel.position.value?.longitude = it.longitude
-               // homeViewModel.latitude.value= it.latitude
-               //homeViewModel.longitude.value= it.longitude
+                homeViewModel.position.value= CurrentPosition(it.latitude,it.longitude)
+
+                //homeViewModel.position.value?.longitude = it.longitude
+
+                //homeViewModel.latitude.value= it.latitude
+                //homeViewModel.longitude.value= it.longitude
 
             }
         }

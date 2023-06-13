@@ -3,6 +3,7 @@ package com.example.botnavigation.viewmodels
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,12 @@ class HomeViewModel : ViewModel() {
     private val _text = MutableLiveData<String>()
     val text: MutableLiveData<String> = _text
 
+    // for testing only
+    private var _longitude = MutableLiveData<Double>()
+    var longitude :MutableLiveData<Double> = _longitude
+
+
+//--------------
 
     private val _position = MutableLiveData<CurrentPosition>()
     var position : MutableLiveData<CurrentPosition> = _position
@@ -40,8 +47,12 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _text.value = "Sucess "
-                data = WeatherApi.retrofitService.getData() as MutableLiveData<ResponseApi>
+                 data.value =
+                     position.value?.let {
+                         WeatherApi.retrofitService.getData(it.latitude,it.longitude)
 
+                     }
+                Log.i("dataAPI", "${data.value}")
             } catch (e: Exception) {
                 _text.value = "Fail to get info"
                 _status.value = "Failure: ${e.message}"
