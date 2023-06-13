@@ -40,6 +40,10 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.homeViewModel = homeViewModel
 
+        //Update UI on change =)
+        homeViewModel.latitude.observe(viewLifecycleOwner,{newValue->
+            homeViewModel.text.value=newValue.toString()
+        })
         return binding.root
     }
 
@@ -69,16 +73,11 @@ class HomeFragment : Fragment() {
         }
         task.addOnSuccessListener {
             if(it!=null){
-                Toast.makeText(requireContext(), "${it.latitude}", Toast.LENGTH_LONG).show()
+                //Toast.makeText(requireContext(), "${it.latitude}", Toast.LENGTH_LONG).show()
                 Log.i("location", "${it.longitude}")
-                homeViewModel.latitude= it.latitude as LiveData<Double>
-                homeViewModel.longitude= it.longitude as LiveData<Double>
-                //val sharedPref = this?.getSharedPreferences("shared_prefs", Context.MODE_PRIVATE) ?: return@addOnSuccessListener
-                    //with (sharedPref.edit()) {
-                    //putFloat("latitude",it.latitude.toFloat())
-                    //putFloat("longitude",it.longitude.toFloat())
-                    //apply()
-                //}
+                homeViewModel.latitude.value= it.latitude
+                homeViewModel.longitude.value= it.longitude
+
             }
         }
     }

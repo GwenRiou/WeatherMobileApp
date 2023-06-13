@@ -21,13 +21,13 @@ class HomeViewModel : ViewModel() {
     val status: LiveData<String> = _status
 
     private val _text = MutableLiveData<String>()
-    val text: LiveData<String> = _text
+    val text: MutableLiveData<String> = _text
 
-    private val _latitude = MutableLiveData<Double>()
-    var latitude :LiveData<Double> = _latitude
+    private var _latitude = MutableLiveData<Double>()
+    var latitude :MutableLiveData<Double> = _latitude
 
-    private val _longitude = MutableLiveData<Double>()
-    var longitude :LiveData<Double> = _longitude
+    private var _longitude = MutableLiveData<Double>()
+    var longitude :MutableLiveData<Double> = _longitude
     init {
         getWeatherData()
     }
