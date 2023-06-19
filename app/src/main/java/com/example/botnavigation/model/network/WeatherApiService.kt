@@ -1,6 +1,7 @@
 package com.example.botnavigation.model.network
 
 import com.example.botnavigation.model.network.CurrentWeatherApiResponse.CurrentWeatherResponse
+import com.example.botnavigation.model.network.DailyWeatherApiResponse.DailyWeatherResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -28,11 +29,11 @@ interface WeatherApiService {
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double
     ) : CurrentWeatherResponse
-    @GET("v1/forecast?daily=weathercode,temperature_2m_max,temperature_2m_min&current_weather=true&timezone=Europe%2FBerlin")
-    suspend fun getData(
+    @GET("v1/forecast?daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=GMT")
+    suspend fun getDailyWeather(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double
-    ) : ResponseApi
+    ) : DailyWeatherResponse
 
     //@GET("
 // v1/current.json?key=da53895e6cc04faea29130610231306 &q=48.8567,2.3508&aqi=no")

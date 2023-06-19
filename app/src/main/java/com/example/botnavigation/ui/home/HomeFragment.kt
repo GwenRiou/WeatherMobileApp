@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-         val preferences: SharedPreferences =  requireContext().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+        // val preferences: SharedPreferences =  requireContext().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
         //val lat = preferences.getFloat("latitude", 0.0F)
         //val lon = preferences.getFloat("longitude", 0.0F)
         val binding = FragmentHomeBinding.inflate(inflater)
@@ -47,24 +47,42 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.homeViewModel = homeViewModel
 
-
-
+        //Status of the api response
+        binding.statusImage.visibility = View.VISIBLE
+        binding.statusImage.setImageResource(R.drawable.loading_animation)
 
         // call the getWeatherData With the new location
         homeViewModel.position.observe(viewLifecycleOwner, { newValue ->
             homeViewModel.getCurrentWeatherData(newValue)
         })
-        //Update UI on change =)
 
+        //check if the result of the api call fail or not
+        homeViewModel.status.observe(viewLifecycleOwner, { newValue ->
+            if (homeViewModel.status.value == HomeViewModel.WeatherApiStatus.ERROR ) {
+
+                binding.statusImage.visibility = View.VISIBLE
+                binding.statusImage.setImageResource(R.drawable.ic_connection_error)
+            }else{
+                binding.statusImage.visibility = View.GONE
+            }
+        })
+
+        //Update UI once we get data =)
         homeViewModel.dataCurrentWeather.observe(viewLifecycleOwner) { newValue ->
             homeViewModel.text.value = newValue.current_weather.toString()
-            //homeViewModel.temperature.value = newValue.current_weather.temperature.toString()
-
 
             when (newValue.current_weather.weathercode) {
                 0 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sunny))
-                1, 2, 3 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sunny))
-                45, 48 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background))
+                1, 2 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sun_cloud))
+                3 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_cloud))
+                45, 48 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_fog))
+                51, 53, 55 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_drizzle))
+                56, 57 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_freezing_drizzle))
+                61, 63, 65, 80, 81, 82 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_rainy))
+                66, 67 	-> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_freezing_rain))
+                71, 73, 75, 85, 86 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_snow))
+                77 ->	binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_snow_gains))
+                95,96, 99 -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_thunderstorm))
                 else -> binding.imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background))
             }
 
@@ -82,6 +100,7 @@ class HomeFragment : Fragment() {
                 }
             }
             //wind
+            binding.imageWind.setImageDrawable(getResources().getDrawable(R.drawable.ic_wind))
             binding.textWind.text = newValue.current_weather.windspeed.toString() + "km/h"
 
 
