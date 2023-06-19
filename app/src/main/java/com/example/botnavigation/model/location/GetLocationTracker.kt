@@ -9,7 +9,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 
-//TODO use dagerhilt to implente the location in MVVM style
+//TODO use dagerhilt to implente the location in MVVM style // learn data injection first
 class GetLocationTracker {
 /*
     //check the permission

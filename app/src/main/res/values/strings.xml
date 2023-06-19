@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">botNavigation</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Current</string>
+    <string name="title_dashboard">Daily</string>
+    <string name="title_notifications">Setting</string>
+    <string name="temperature">%s °C</string>
 </resources>
